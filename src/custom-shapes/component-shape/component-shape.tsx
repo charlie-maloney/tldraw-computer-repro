@@ -217,33 +217,71 @@ export class ComponentNodeUtil extends BaseBoxShapeUtil<IComponentShape> {
             forceSolid={isForceSolid}
           />
         </SVGContainer>
-        {showHtmlContainer && (
-          <HTMLContainer
+        <HTMLContainer
+          style={{
+            overflow: "hidden",
+            width: shape.props.w,
+            height: shape.props.h + props.growY,
+            pointerEvents: "all",
+          }}
+        >
+          <div
             style={{
-              overflow: "hidden",
-              width: shape.props.w,
-              height: shape.props.h + props.growY,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <button onClick={() => console.log("hello")}>hello</button>
-            <RichTextLabel
-              shapeId={id}
-              type={type}
-              font={font}
-              fontSize={LABEL_FONT_SIZES[size] * shape.props.scale}
-              lineHeight={TEXT_PROPS.lineHeight}
-              padding={LABEL_PADDING * shape.props.scale}
-              fill={fill}
-              align={align}
-              verticalAlign={verticalAlign}
-              richText={richText}
-              isSelected={isOnlySelected}
-              // labelColor={getColorValue(theme, props.labelColor, "solid")}
-              labelColor={props.labelColor}
-              wrap
-            />
-          </HTMLContainer>
-        )}
+            <div
+              style={{
+                borderBottom: "1px solid black",
+                padding: "0.5rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                Instruction
+              </div>
+              <button
+                style={{
+                  cursor: "pointer",
+                }}
+                onPointerDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchEnd={(e) => e.stopPropagation()}
+                onClick={() => window.alert("Hello!")}
+              >
+                Play
+              </button>
+            </div>
+
+            {showHtmlContainer && (
+              <RichTextLabel
+                shapeId={id}
+                type={type}
+                font={font}
+                fontSize={LABEL_FONT_SIZES[size] * shape.props.scale}
+                lineHeight={TEXT_PROPS.lineHeight}
+                padding={LABEL_PADDING * shape.props.scale}
+                fill={fill}
+                align={align}
+                verticalAlign={verticalAlign}
+                richText={richText}
+                isSelected={isOnlySelected}
+                // labelColor={getColorValue(theme, props.labelColor, "solid")}
+                labelColor={props.labelColor}
+                wrap
+              />
+            )}
+          </div>
+        </HTMLContainer>
         {/* {shape.props.url && <HyperlinkButton url={shape.props.url} />} */}
       </>
     );
