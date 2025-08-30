@@ -1,6 +1,4 @@
 import {
-  DefaultKeyboardShortcutsDialog,
-  DefaultKeyboardShortcutsDialogContent,
   DefaultToolbar,
   DefaultToolbarContent,
   TldrawUiMenuItem,
@@ -23,6 +21,16 @@ export const uiOverrides: TLUiOverrides = {
         editor.setCurrentTool("textNode");
       },
     };
+    tools.componentNode = {
+      id: "componentNode",
+      icon: "color",
+      label: "Component Node",
+      kbd: "c",
+      onSelect: () => {
+        // console.log("hello");
+        editor.setCurrentTool("componentNode");
+      },
+    };
     return tools;
   },
 };
@@ -31,23 +39,19 @@ export const components: TLComponents = {
   Toolbar: (props) => {
     const tools = useTools();
     const isTextNodeSelected = useIsToolSelected(tools["textNode"]);
+    const isComponentNodeSelected = useIsToolSelected(tools["componentNode"]);
     return (
       <DefaultToolbar {...props}>
         <TldrawUiMenuItem
           {...tools["textNode"]}
           isSelected={isTextNodeSelected}
         />
+        <TldrawUiMenuItem
+          {...tools["componentNode"]}
+          isSelected={isComponentNodeSelected}
+        />
         <DefaultToolbarContent />
       </DefaultToolbar>
-    );
-  },
-  KeyboardShortcutsDialog: (props) => {
-    const tools = useTools();
-    return (
-      <DefaultKeyboardShortcutsDialog {...props}>
-        <TldrawUiMenuItem {...tools["textNode"]} />
-        <DefaultKeyboardShortcutsDialogContent />
-      </DefaultKeyboardShortcutsDialog>
     );
   },
 };
