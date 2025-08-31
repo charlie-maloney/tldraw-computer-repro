@@ -12,6 +12,9 @@ import {
   type TLShapeId,
 } from "tldraw";
 
+import { useEditor, useValue } from "tldraw";
+import "./text-node.css";
+
 type ITextNode = TLBaseShape<
   "textNodeShape",
   {
@@ -34,9 +37,9 @@ export class TextNodeUtil extends ShapeUtil<ITextNode> {
   // [b]
   getDefaultProps(): ITextNode["props"] {
     return {
-      w: 200,
-      h: 200,
-      text: "I'm a shape!",
+      w: 250,
+      h: 250,
+      text: "",
     };
   }
 
@@ -48,18 +51,9 @@ export class TextNodeUtil extends ShapeUtil<ITextNode> {
     return true;
   }
   override isAspectRatioLocked() {
-    return false;
+    return true;
   }
-  onDoubleClick(shape: ITextNode):
-    | void
-    | ({
-        id: TLShapeId;
-        meta?: Partial<JsonObject> | undefined;
-        props?: Partial<{ w: number; h: number; text: string }> | undefined;
-        type: "textNodeShape";
-      } & Partial<Omit<ITextNode, "props" | "type" | "id" | "meta">>) {
-    console.log(shape);
-  }
+
 
   // [d]
   getGeometry(shape: ITextNode): Geometry2d {
@@ -77,10 +71,60 @@ export class TextNodeUtil extends ShapeUtil<ITextNode> {
 
   // [f]
   component(shape: ITextNode) {
+    const editor = useEditor();
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      editor.updateShape({
+        id: shape.id,
+        type: "textNodeShape",
+        props: { text: e.target.value },
+      });
+    };
+
+    const handlePlay = () => {
+      console.log("Button has been clicked");
+    };
+
     return (
-      <HTMLContainer style={{ backgroundColor: "#efefef" }}>
-        <h2>Text</h2>
-        {shape.props.text}
+      <HTMLContainer className="text-node-container">
+        <div className="text-node-header">
+          <h2 className="text-node-title">Text</h2>
+          <button
+            className="text-node-play-btn"
+          
+            tabIndex={0}
+            onClick={handlePlay}
+            onPointerDown={(e) => e.stopPropagation()} // Only this is needed
+            aria-label="Play"
+          >
+            <svg
+              className="text-node-play-icon"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="12" fill="none" />
+              <polygon points="9,7 19,12 9,17" />
+            </svg>
+          </button>
+        </div>
+        <textarea
+          className="text-node-textarea"
+          value={shape.props.text}
+          onChange={handleChange}
+          autoFocus={true}
+          draggable={false}
+          tabIndex={0}
+          spellCheck={true}
+          placeholder="Add in your text here..."
+          onPointerDown={e => {
+            e.stopPropagation();
+            // e.preventDefault();
+          }}
+        />
       </HTMLContainer>
     );
   }
