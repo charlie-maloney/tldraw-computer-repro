@@ -1,11 +1,11 @@
 import { Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
-import { TextNodeUtil } from "./custom-shapes/text-node/text-node";
+import { ComponentShapeUtil } from "./custom-shapes/component-shape/component-shape";
 import { components, uiOverrides } from "./ui-overrides";
-import { TextNodeTool } from "./custom-shapes/text-node/text-node-tool";
+import { ComponentTool } from "./custom-shapes/component-shape/component-shape-tool";
 
-const customShapes = [TextNodeUtil];
-const customTools = [TextNodeTool];
+const customShapes = [ComponentShapeUtil];
+const customTools = [ComponentTool];
 
 export default function App() {
   return (

@@ -9,18 +9,29 @@ import {
   type TLComponents,
   type TLUiOverrides,
 } from "tldraw";
+import { ComponentShapeType } from "./custom-shapes/component-shape/component-shape";
 
+// TODO: make this dynamically generated based on component shape types
 export const uiOverrides: TLUiOverrides = {
   tools(editor, tools) {
-    // Create a tool item in the ui's context.
-    tools.textNode = {
-      id: "textNode",
+    tools.instructionComponentTool = {
+      id: "instructionComponentTool",
       icon: "color",
-      label: "Text Node",
-      kbd: "c",
+      label: "Instruction Component",
+      kbd: undefined,
       onSelect: () => {
-        // console.log("hello");
-        editor.setCurrentTool("textNode");
+        editor.setStyleForNextShapes(ComponentShapeType, "instruction");
+        editor.setCurrentTool("componentTool");
+      },
+    };
+    tools.textComponentTool = {
+      id: "textComponentTool",
+      icon: "color",
+      label: "Text Component",
+      kbd: undefined,
+      onSelect: () => {
+        editor.setStyleForNextShapes(ComponentShapeType, "text");
+        editor.setCurrentTool("componentTool");
       },
     };
     return tools;
@@ -30,12 +41,21 @@ export const uiOverrides: TLUiOverrides = {
 export const components: TLComponents = {
   Toolbar: (props) => {
     const tools = useTools();
-    const isTextNodeSelected = useIsToolSelected(tools["textNode"]);
+    const isTextComponentSelected = useIsToolSelected(
+      tools["textComponentTool"]
+    );
+    const isInstructionComponentSelected = useIsToolSelected(
+      tools["instructionComponentTool"]
+    );
     return (
       <DefaultToolbar {...props}>
         <TldrawUiMenuItem
-          {...tools["textNode"]}
-          isSelected={isTextNodeSelected}
+          {...tools["textComponentTool"]}
+          isSelected={isTextComponentSelected}
+        />
+        <TldrawUiMenuItem
+          {...tools["instructionComponentTool"]}
+          isSelected={isInstructionComponentSelected}
         />
         <DefaultToolbarContent />
       </DefaultToolbar>
@@ -45,7 +65,7 @@ export const components: TLComponents = {
     const tools = useTools();
     return (
       <DefaultKeyboardShortcutsDialog {...props}>
-        <TldrawUiMenuItem {...tools["textNode"]} />
+        <TldrawUiMenuItem {...tools["componentTool"]} />
         <DefaultKeyboardShortcutsDialogContent />
       </DefaultKeyboardShortcutsDialog>
     );
