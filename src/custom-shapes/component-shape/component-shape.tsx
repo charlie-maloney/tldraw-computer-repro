@@ -14,7 +14,7 @@ import {
 
 import { useEditor } from "tldraw";
 import "./component-shape.css";
-import { runGraphFromShape } from "../graph/graph";
+import { runGraphFromShape } from "../graph/graph-runner";
 
 export const ComponentShapeType = StyleProp.defineEnum("tldraw:component", {
   defaultValue: "text",

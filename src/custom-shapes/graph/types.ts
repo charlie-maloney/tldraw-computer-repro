@@ -1,8 +1,8 @@
-import type { TLUnknownShape } from "tldraw";
+import type { TLShapeId, TLUnknownShape } from "tldraw";
 import type { IComponentShape } from "../component-shape/component-shape";
 
-export interface Node {
-  shapeId: string;
+export interface GraphNode {
+  shapeId: TLShapeId;
   type: string;
   component: string;
   value: string;
