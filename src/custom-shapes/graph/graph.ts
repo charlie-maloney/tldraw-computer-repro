@@ -1,6 +1,7 @@
 import type { Editor, TLArrowBinding, TLShapeId, TLUnknownShape } from "tldraw";
 import { DepGraph } from "dependency-graph";
 import { isComponentShape, type Node } from "./types";
+import type { IComponentShape } from "../component-shape/component-shape";
 
 export const buildGraph = (startingShapeId: TLShapeId, editor: Editor) => {
   const graph = new DepGraph<Node>();
@@ -77,44 +78,72 @@ export const buildGraph = (startingShapeId: TLShapeId, editor: Editor) => {
 export const getInputsOfNode = (id: string, graph: DepGraph<Node>) => {
   return graph.dependenciesOf(id).filter((n) => {
     const node = graph.getNodeData(n);
-    return node.type === "componentShape" && node.component === "text";
+    return node;
   });
 };
 
 export const getOutputsOfNode = (id: string, graph: DepGraph<Node>) => {
   return graph.dependantsOf(id).filter((n) => {
     const node = graph.getNodeData(n);
-    return node.type === "componentShape" && node.component === "text";
+    return node;
   });
 };
 
 export const runGraphFromShape = (shapeId: TLShapeId, editor: Editor) => {
   const graph = buildGraph(shapeId, editor);
-  const currentNode = graph.getNodeData(shapeId);
-
-  const outputs = getOutputsOfNode(shapeId, graph).map((n) =>
-    graph.getNodeData(n)
-  );
-
-  const inputs = getInputsOfNode(shapeId, graph).map((n) =>
-    graph.getNodeData(n)
-  );
-
   const processedNodes = new Set<string>();
+  const queue: string[] = [shapeId];
 
-  switch (currentNode.component) {
-    case "instruction":
-      console.log("Running instruction", {
-        instruction: currentNode.value,
-        inputs: inputs.map((n) => n.value).join(", "),
-        outputTypes: [...new Set(outputs.map((n) => n.component))],
-        outputNodes: outputs,
-      });
-      processedNodes.add(shapeId);
-      break;
-    case "text":
-      console.log("Running text:", currentNode);
-      processedNodes.add(shapeId);
-      break;
+  while (queue.length > 0) {
+    const currentId = queue.shift()!;
+    if (processedNodes.has(currentId)) continue;
+    const currentNode = graph.getNodeData(currentId);
+    if (!currentNode) continue;
+
+    const inputs = getInputsOfNode(currentId, graph).map((n) =>
+      graph.getNodeData(n)
+    );
+    const outputs = graph
+      .directDependantsOf(currentId)
+      .map((n) => graph.getNodeData(n));
+
+    switch (currentNode.component) {
+      case "instruction":
+        console.log("Running instruction", {
+          instruction: currentNode.value,
+          inputs: inputs
+            .filter((n) => n.component === "text")
+            .map((n) => n.value)
+            .join(", "),
+          outputTypes: [
+            ...new Set(
+              graph
+                .directDependantsOf(currentId)
+                .map<IComponentShape | undefined>((n) =>
+                  editor.getShape(n as TLShapeId)
+                )
+                .filter<IComponentShape>((n) => !!n)
+                .map((n) => n.props.component)
+            ),
+          ],
+          outputNodes: outputs,
+        });
+        processedNodes.add(currentId);
+        break;
+      case "text":
+        console.log("Running text:", currentNode);
+        processedNodes.add(currentId);
+        break;
+      default:
+        processedNodes.add(currentId);
+        break;
+    }
+
+    // Enqueue unprocessed instruction nodes that are direct outputs
+    for (const outputNode of outputs) {
+      if (outputNode && !queue.includes(outputNode.shapeId)) {
+        queue.push(outputNode.shapeId);
+      }
+    }
   }
 };
