@@ -14,6 +14,7 @@ import {
 
 import { useEditor } from "tldraw";
 import "./component-shape.css";
+import { runGraphFromShape } from "../graph/graph";
 
 export const ComponentShapeType = StyleProp.defineEnum("tldraw:component", {
   defaultValue: "text",
@@ -85,7 +86,8 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
     };
 
     const handlePlay = () => {
-      console.log("Button has been clicked");
+      console.log("id", shape.id);
+      runGraphFromShape(shape.id, editor);
     };
 
     return (
@@ -120,6 +122,7 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
             </button>
           )}
         </div>
+        <span style={{ fontSize: "20px" }}>{shape.id}</span>
         <textarea
           className="text-node-textarea"
           value={shape.props.text}

@@ -11,6 +11,7 @@ export default function App() {
   return (
     <div style={{ position: "fixed", inset: 0 }}>
       <Tldraw
+        persistenceKey="example"
         shapeUtils={customShapes}
         tools={customTools}
         overrides={uiOverrides}
