@@ -11,6 +11,7 @@
     "test-openai": "tsx --require dotenv/config testingPrompt.ts"
   },
   "dependencies": {
+    "dependency-graph": "^1.0.0",
     "dotenv": "^17.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
