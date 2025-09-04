@@ -1,15 +1,16 @@
 import {
   DefaultKeyboardShortcutsDialog,
   DefaultKeyboardShortcutsDialogContent,
-  DefaultToolbar,
-  DefaultToolbarContent,
+  // DefaultToolbar,
+  // DefaultToolbarContent,
   TldrawUiMenuItem,
-  useIsToolSelected,
+  // useIsToolSelected,
   useTools,
   type TLComponents,
   type TLUiOverrides,
 } from "tldraw";
 import { ComponentShapeType } from "./custom-shapes/component-shape/component-shape";
+import Toolbar from "./components/toolbar";
 
 // TODO: make this dynamically generated based on component shape types
 export const uiOverrides: TLUiOverrides = {
@@ -39,28 +40,36 @@ export const uiOverrides: TLUiOverrides = {
 };
 
 export const components: TLComponents = {
-  Toolbar: (props) => {
-    const tools = useTools();
-    const isTextComponentSelected = useIsToolSelected(
-      tools["textComponentTool"]
-    );
-    const isInstructionComponentSelected = useIsToolSelected(
-      tools["instructionComponentTool"]
-    );
-    return (
-      <DefaultToolbar {...props}>
-        <TldrawUiMenuItem
-          {...tools["textComponentTool"]}
-          isSelected={isTextComponentSelected}
-        />
-        <TldrawUiMenuItem
-          {...tools["instructionComponentTool"]}
-          isSelected={isInstructionComponentSelected}
-        />
-        <DefaultToolbarContent />
-      </DefaultToolbar>
-    );
+// Code below was orginally used to add the textNode and instructionNode to the bottom Toolbar. This is no longer needed
+
+  // Toolbar: (props) => {
+  //   const tools = useTools();
+  //   const isTextComponentSelected = useIsToolSelected(
+  //     tools["textComponentTool"]
+  //   );
+  //   const isInstructionComponentSelected = useIsToolSelected(
+  //     tools["instructionComponentTool"]
+  //   );
+  //   return (
+  //     <DefaultToolbar {...props}>
+  //       <TldrawUiMenuItem
+  //         {...tools["textComponentTool"]}
+  //         isSelected={isTextComponentSelected}
+  //       />
+  //       <TldrawUiMenuItem
+  //         {...tools["instructionComponentTool"]}
+  //         isSelected={isInstructionComponentSelected}
+  //       />
+  //       <DefaultToolbarContent />
+  //     </DefaultToolbar>
+  //   );
+  // },
+
+  // This is the left hand side tool bar which needed to be passed into the ui-overrides to be able to add the nodes as per the above
+  TopPanel: () => {
+    return <Toolbar />;
   },
+
   KeyboardShortcutsDialog: (props) => {
     const tools = useTools();
     return (

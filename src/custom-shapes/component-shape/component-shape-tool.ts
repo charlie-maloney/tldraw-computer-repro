@@ -13,8 +13,8 @@ export class ComponentTool extends StateNode {
       x: originPagePoint.x,
       y: originPagePoint.y,
       props: {
-        w: 200,
-        h: 100,
+        w: 300,
+        h: 150,
         component: this.editor.getStyleForNextShape(ComponentShapeType),
         text: "",
       },
