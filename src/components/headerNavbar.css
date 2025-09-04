@@ -1,0 +1,35 @@
+.header-navbar {
+    position: fixed;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(242, 167, 167, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 10px 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.author-link {
+    color: #3182ce;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    padding: 2px 4px;
+}
+
+.author-link:hover {
+    text-decoration: underline;
+}

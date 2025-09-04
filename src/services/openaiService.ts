@@ -40,7 +40,7 @@ Additional requirements:
 
   // Create the response
   const response = await client.responses.create({
-    model: 'gpt-4o',
+    model: 'gpt-4o-mini',
     instructions: promptInstruction,
     input: promptInputs,
   });
