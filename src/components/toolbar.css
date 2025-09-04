@@ -12,6 +12,7 @@
     padding: 5px;
     gap: 1px;
     z-index: 1000;
+    pointer-events: auto; 
 }
 
 .toolbar-button {
@@ -25,7 +26,8 @@
     cursor: pointer;
     transition: all 0.2s ease;
     color: #4a5568;
-    min-width: 110px;
+    min-width: 130px;
+    pointer-events: auto; 
 }
 
 .toolbar-button:hover {
