@@ -7,8 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "test-openai": "tsx --require dotenv/config testingPrompt.ts"
+    "preview": "vite preview"
   },
   "dependencies": {
     "dependency-graph": "^1.0.0",
