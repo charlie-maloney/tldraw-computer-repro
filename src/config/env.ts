@@ -15,7 +15,6 @@ const getEnvVar = (key: string): string => {
 };
 
 
-
 export const env: EnvConfig = {
     OPENAI_API_KEY: getEnvVar('OPENAI_API_KEY'),
     OPENAI_BASE_URL: process.env.VITE_OPENAI_BASE_URL || 'https://api.openai.com/v1',

@@ -1,102 +1,55 @@
-import { env } from '../config/env';
+import 'dotenv/config';
+import OpenAI from "openai";
 
-export interface OpenAIRequest {
-  prompt: string;
-  model: string;
-  temperature: number;
-
-  //   Optional, don't think we'll need this
-  maxTokens?: number; //Optional
+// Interface for function inputs
+interface InstructionInput {
+    instruction: string;
+    inputs: string[];
 }
 
-export interface OpenAIResponse {
-  response: string;
-
-  //   Optional, don't think we'll need this
-  usage?: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-  };
+// Interface for function output
+interface InstructionOutput {
+    result: string;
 }
 
-// Structuring the error response that comes from OpenAI
-export interface OpenAIError {
-  error: string;
-  code?: string;
-  type?: string;
+// Initialize OpenAI client
+const client = new OpenAI({
+    apiKey: process.env['VITE_OPENAI_API_KEY'],
+});
+
+// Function to combine the inputs with commas
+function combineWithCommas(strings: string[]): string {
+    return strings.reduce((acc, curr, idx) => (idx === 0 ? curr : `${acc}, ${curr}`), "");
 }
 
+// Main function to process instructions
+async function processInstruction(input: InstructionInput): Promise<InstructionOutput> {
+    const { instruction, inputs } = input;
+    
+    // Combine the inputs with commas
+    const promptInputs = combineWithCommas(inputs);
 
-class OpenAIService {
-  private baseURL: string;
-  private apiKey: string;
-  private timeout: number;
+    // Create the prompt
+    const promptInstruction = `Here is your instruction: ${instruction}. 
+Execute your prompt based of this instruction and the inputs you have been given.
+Additional requirements:
+- If you have been given a mathematical operation, return the result only
+- If you have been given text and asked to sum the inputs together, try and interprest the word as a number. As an example, triangle is 3.
 
-  constructor() {
-    this.baseURL = env.OPENAI_BASE_URL;
-    this.apiKey = env.OPENAI_API_KEY;
-    this.timeout = env.API_TIMEOUT;
-  }
-  async sendPrompt({
-    prompt,
-    model = env.OPENAI_MODEL,
-    maxTokens = 1000,
-    temperature = 0.7
-  }: OpenAIRequest): Promise<OpenAIResponse> {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
+`;
 
-      const response = await fetch(`${this.baseURL}/chat/completions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify({
-          model,
-          messages: [
-            {
-              role: 'user',
-              content: prompt
-            }
-          ],
-          max_tokens: maxTokens,
-          temperature,
-        }),
-        signal: controller.signal,
-      });
+    // Create the response
+    const response = await client.responses.create({
+        model: 'gpt-4o',
+        instructions: promptInstruction,
+        input: promptInputs,
+    });
 
-      clearTimeout(timeoutId);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(`OpenAI API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
-      }
-
-      const data = await response.json();
-
-      return {
-        response: data.choices[0]?.message?.content || '',
-        usage: {
-          promptTokens: data.usage?.prompt_tokens || 0,
-          completionTokens: data.usage?.completion_tokens || 0,
-          totalTokens: data.usage?.total_tokens || 0,
-        }
-      };
-
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          throw new Error('Request timeout - please try again');
-        }
-        throw new Error(`OpenAI Service Error: ${error.message}`);
-      }
-      throw new Error('Unknown error occurred');
-    }
-  }
+    // Return the result wrapped in the output interface
+    return {
+        result: response.output_text
+    };
 }
 
-export const openaiService = new OpenAIService();
-
+export { processInstruction };
+export type { InstructionInput, InstructionOutput };
