@@ -1,19 +1,15 @@
-import 'dotenv/config';
-
 interface EnvConfig {
-    OPENAI_API_KEY: string;
+  OPENAI_API_KEY: string;
 }
 
-
 const getEnvVar = (key: string): string => {
-    const value = process.env[key];
-    if (!value) {
-        throw new Error(`Environment variable ${key} is not defined`);
-    }
-    return value;
+  const value = import.meta.env[key];
+  if (!value) {
+    throw new Error(`Environment variable ${key} is not defined`);
+  }
+  return value;
 };
 
 export const env: EnvConfig = {
-    OPENAI_API_KEY: getEnvVar('VITE_OPENAI_API_KEY')
+  OPENAI_API_KEY: getEnvVar("VITE_OPENAI_API_KEY"),
 };
-

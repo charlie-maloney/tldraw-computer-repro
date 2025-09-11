@@ -5,7 +5,8 @@ export interface GraphNode {
   shapeId: TLShapeId;
   type: string;
   component: string;
-  value: string;
+  getValue: () => string;
+  setValue: (value: string) => void;
   output: string;
   hasRun: boolean;
 }

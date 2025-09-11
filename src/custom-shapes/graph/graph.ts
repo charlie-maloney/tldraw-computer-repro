@@ -1,6 +1,7 @@
 import type { Editor, TLArrowBinding, TLShapeId, TLUnknownShape } from "tldraw";
 import { DepGraph } from "dependency-graph";
 import { isComponentShape, type GraphNode } from "./types";
+import type { IComponentShape } from "../component-shape/component-shape";
 
 export const buildGraph = (startingShapeId: TLShapeId, editor: Editor) => {
   const graph = new DepGraph<GraphNode>();
@@ -25,7 +26,20 @@ export const buildGraph = (startingShapeId: TLShapeId, editor: Editor) => {
         shapeId: currentShape.id,
         type: currentShape.type,
         component: currentShape.props.component,
-        value: currentShape.props.text,
+        getValue: () => {
+          const currentShape = editor.getShape<IComponentShape>(shapeId);
+          return currentShape ? currentShape.props.text : "";
+        },
+        setValue: (value: string) => {
+          const currentShape = editor.getShape<IComponentShape>(shapeId);
+          if (currentShape) {
+            editor.updateShape<IComponentShape>({
+              id: shapeId,
+              type: "componentShape",
+              props: { ...currentShape.props, text: value },
+            });
+          }
+        },
         output: "",
         hasRun: false,
       });
@@ -53,7 +67,24 @@ export const buildGraph = (startingShapeId: TLShapeId, editor: Editor) => {
               shapeId: otherShape.id,
               type: otherShape.type,
               component: otherShape.props.component,
-              value: otherShape.props.text,
+              getValue: () => {
+                const otherShape = editor.getShape<IComponentShape>(
+                  binding.toId
+                );
+                return otherShape ? otherShape.props.text : "";
+              },
+              setValue: (value: string) => {
+                const otherShape = editor.getShape<IComponentShape>(
+                  binding.toId
+                );
+                if (otherShape) {
+                  editor.updateShape<IComponentShape>({
+                    id: otherShape.id,
+                    type: "componentShape",
+                    props: { ...otherShape.props, text: value },
+                  });
+                }
+              },
               output: "",
               hasRun: false,
             });
