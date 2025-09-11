@@ -28,6 +28,7 @@ export type IComponentShape = TLBaseShape<
     h: number;
     component: "instruction" | "text";
     text: string;
+    isProcessing: boolean;
   }
 >;
 
@@ -38,6 +39,7 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
     h: T.number,
     text: T.string,
     component: ComponentShapeType,
+    isProcessing: T.boolean,
   };
 
   getDefaultProps(): IComponentShape["props"] {
@@ -46,6 +48,7 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
       h: 250,
       text: "",
       component: "text",
+      isProcessing: false,
     };
   }
 
@@ -90,26 +93,30 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
       runGraphFromShape(shape.id, editor);
     };
 
+    const isProcessing = shape.props.isProcessing || false;
+
     return (
       <HTMLContainer
-        className="text-node-container"
+        className={`component-shape-container${
+          isProcessing ? " component-shape-processing" : ""
+        }`}
         style={{ pointerEvents: "all" }}
       >
-        <div className="text-node-header">
-          <h2 className="text-node-title">
+        <div className="component-shape-header">
+          <h2 className="component-shape-title">
             {shape.props.component.charAt(0).toUpperCase() +
               shape.props.component.slice(1).toLowerCase()}
           </h2>
           {shape.props.component === "instruction" && (
             <button
-              className="text-node-play-btn"
+              className="component-shape-play-btn"
               tabIndex={0}
               onClick={handlePlay}
               onPointerDown={(e) => e.stopPropagation()} // Only this is needed
               aria-label="Play"
             >
               <svg
-                className="text-node-play-icon"
+                className="component-shape-play-icon"
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
@@ -124,7 +131,7 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
         </div>
         <span style={{ fontSize: "20px" }}>{shape.id}</span>
         <textarea
-          className="text-node-textarea"
+          className="component-shape-textarea"
           value={shape.props.text}
           onChange={handleChange}
           autoFocus={true}

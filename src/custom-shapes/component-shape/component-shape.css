@@ -1,4 +1,4 @@
-.text-node-container {
+.component-shape-container {
     background-color: #faf9f9;
     position: relative;
     width: 100%;
@@ -10,7 +10,13 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15)
 }
 
-.text-node-header {
+.component-shape-processing {
+    box-shadow: 0 0 0 4px #2196f3, 0 4px 16px rgba(0, 0, 0, 0.15);
+    border-color: #2196f3;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.component-shape-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -20,11 +26,11 @@
     box-sizing: border-box;
 }
 
-.text-node-title {
+.component-shape-title {
     margin: 5px;
 }
 
-.text-node-play-btn {
+.component-shape-play-btn {
     margin-left: 10px;
     border: none;
     pointer-events: all;
@@ -39,11 +45,11 @@
     cursor: pointer;
 }
 
-.text-node-play-btn:hover {
+.component-shape-play-btn:hover {
     background: #e0e0e0;
 }
 
-.text-node-play-icon {
+.component-shape-play-icon {
     display: block;
     color: #333;
     transition: color 0.2s;
@@ -51,7 +57,7 @@
 
 
 
-.text-node-textarea {
+.component-shape-textarea {
     width: 100%;
     height: calc(100% - 40px);
     margin: 0;
