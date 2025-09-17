@@ -101,10 +101,10 @@ export const runGraphFromShape = async (shapeId: TLShapeId, editor: Editor) => {
           }
         }
 
-        console.log("Running instruction", {
-          instruction: currentNode.getValue(),
-          outputNodes: outputs,
-        });
+        // console.log("Running instruction", {
+        //   instruction: currentNode.getValue(),
+        //   outputNodes: outputs,
+        // });
 
         processedNodes.add(currentId);
         setProcessingState(editor, currentNode.shapeId, false);
@@ -112,7 +112,7 @@ export const runGraphFromShape = async (shapeId: TLShapeId, editor: Editor) => {
       }
       case "text":
         {
-          console.log("Running text:", currentNode);
+          // console.log("Running text:", currentNode);
           processedNodes.add(currentId);
         }
         break;

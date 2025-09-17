@@ -89,7 +89,7 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
     };
 
     const handlePlay = () => {
-      console.log("id", shape.id);
+      // console.log("id", shape.id);
       runGraphFromShape(shape.id, editor);
     };
 
@@ -97,9 +97,8 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
 
     return (
       <HTMLContainer
-        className={`component-shape-container${
-          isProcessing ? " component-shape-processing" : ""
-        }`}
+        className={`component-shape-container${isProcessing ? " component-shape-processing" : ""
+          }`}
         style={{ pointerEvents: "all" }}
       >
         <div className="component-shape-header">
@@ -129,7 +128,7 @@ export class ComponentShapeUtil extends ShapeUtil<IComponentShape> {
             </button>
           )}
         </div>
-        <span style={{ fontSize: "20px" }}>{shape.id}</span>
+        {/* <span style={{ fontSize: "20px" }}>{shape.id}</span> */}
         <textarea
           className="component-shape-textarea"
           value={shape.props.text}
