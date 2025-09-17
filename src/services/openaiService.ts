@@ -2,6 +2,7 @@ import { env } from "../config/env";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import { z } from "zod/v3";
+// import { z } from "zod/v3";
 
 const InstructionInputSchema = z.object({
   type: z.enum(["text"]),
@@ -42,7 +43,7 @@ async function processInstruction(
 
   // Combine the inputs with commas
   const promptInputs = combineWithCommas(inputs);
-  console.log(zodTextFormat(InstructionOutputSchema, "InstructionOutput"));
+  // console.log(zodTextFormat(InstructionOutputSchema, "InstructionOutput"));
 
   // Create the response
   const response = await client.responses.parse({
